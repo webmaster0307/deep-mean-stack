@@ -1,0 +1,2250 @@
+swagger: '2.0'
+info:
+  title: DynamicPush MEAN API
+  description: DynamicPush API documentation for Node Express
+  version: 0.1.0
+host: localhost
+schemes:
+  - http
+basePath: /api
+produces:
+  - application/json
+paths:
+  /auth/signin:
+    post:
+      summary: user sign in
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: admin@dynamicpush.com
+              password:
+                type: string
+                example: pneFkBRTnKUQtPJ1AzvgKN8zHj5rGj4W5dPK
+      description: let the user sign in and have access to web apis
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /auth/signup:
+    post:
+      summary: user sign up
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: admin@dynamicpush.com
+              password:
+                type: string
+                example: abcd1234
+              firstName:
+                type: string
+                example: John
+              lastName:
+                type: string
+                example: smith
+              company:
+                type: string
+                example: Google
+              phone:
+                type: string
+              address:
+                type: string
+                example: Mock street 101, New York, NY, 11001
+      description: company sign up
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Succesful Response
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /auth/sendConfirmEmail:
+    get:
+      summary: resend confirm account email
+      description: |
+        resend confirm account email
+      parameters:
+        - name: email
+          type: string
+          in: query
+          required: true
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Success response
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /auth/verifyAccount:
+    get:
+      summary: verify account
+      description: |
+        verify account
+      parameters:
+        - name: email
+          in: query
+          type: string
+          required: true
+        - name: confirmToken
+          in: query
+          type: string
+          required: true
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Success response
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /profile:
+    get:
+      summary: get profile details
+      description: |
+        Get profile details
+      tags:
+        - Profile
+      responses:
+        '200':
+          description: Current user profile
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update profile
+      parameters:
+        - name: body
+          description: json object for user
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+                description: First name of the User
+                example: John
+              lastName:
+                type: string
+                description: Last name of the User
+                example: Doe
+              password:
+                type: string
+                description: Password of the User
+                example: Password123!
+      description: |
+        Updates the user and returns the json object
+      tags:
+        - Profile
+      responses:
+        '200':
+          description: User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users:
+    get:
+      summary: list users
+      description: |
+        Get the list of users
+      parameters:
+        - name: role
+          required: false
+          in: query
+          type: string
+      tags:
+        - Users
+      responses:
+        '200':
+          description: An array of users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: create a user
+      parameters:
+        - name: body
+          description: json object for user
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+                description: First name of the User
+                example: John
+              lastName:
+                type: string
+                description: Last name of the User
+                example: Doe
+              email:
+                type: string
+                description: Email address of the User
+                example: john.doe@dynamicpush.com
+              password:
+                type: string
+                description: Password of the User
+                example: Password123!
+      description: |
+        Create a user and returns the json object
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/{userId}:
+    get:
+      summary: returns a user
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          type: string
+      description: |
+        Retrieves a user json object
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update a user
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for user
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+                description: First name of the User
+                example: John
+              lastName:
+                type: string
+                description: Last name of the User
+                example: Doe
+              password:
+                type: string
+                description: Password of the User
+                example: Password123!
+      description: |
+        Updates the user and returns the json object
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: delete a user
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          type: string
+      description: |
+        Deletes the user
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/{userId}/fetchToken:
+    get:
+      summary: fetch token on behalf of the user
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          type: string
+      description: |
+        Retrieves token
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Token object
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /teams:
+    get:
+      summary: Lists Teams
+      description: |
+        Get the list of teams
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: An array of teams
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Creates a Team
+      parameters:
+        - name: body
+          description: json object for team
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the Team
+                example: Alpha Team
+              description:
+                type: string
+                description: Name of the Team
+                example: This is a team of marketing analysts
+      description: |
+        Create a team and returns the json object
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /teams/{teamId}:
+    get:
+      summary: Returns a Team
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+      description: |
+        Retrieves a team json object
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Updates a Team
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for team
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the Team
+                example: Alpha Team
+              description:
+                type: string
+                description: Name of the Team
+                example: This is a team of marketing analysts
+      description: |
+        Updates the team and returns the json object
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Deletes a Team
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+      description: |
+        Deletes the Team
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /teams/{teamId}/access:
+    get:
+      summary: Returns a Team Access List
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+      description: |
+        Retrieves team access list json object
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: An array of team access
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TeamAccess'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Creates a TeamAccess
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for team
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              application:
+                type: string
+                description: Associated application id
+                example: 581c51dd62bf42c07f333154
+              resource:
+                type: string
+                description: Resource name
+                example: analytics
+      description: |
+        Create a team access and returns the whole team object
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /teams/{teamId}/access/{accessId}:
+    put:
+      summary: Updates a TeamAccess
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+        - name: accessId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for team
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              application:
+                type: string
+                description: Associated application id
+                example: 581c51dd62bf42c07f333154
+              resource:
+                type: string
+                description: Resource name
+                example: analytics
+      description: |
+        Create a team access and returns the whole team object
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Deletes a Team Access
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+        - name: accessId
+          required: true
+          in: path
+          type: string
+      description: |
+        Deletes the Team Access
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /teams/{teamId}/members:
+    get:
+      summary: Returns a Team Member List
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+      description: |
+        Retrieves team members list json object
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: An array of team members
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /teams/{teamId}/members/{userId}:
+    put:
+      summary: Adds a member to the team
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+        - name: userId
+          required: true
+          in: path
+          type: string
+      description: |
+        Adds the user to the team and returns the whole team object
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Deletes a member from the team
+      parameters:
+        - name: teamId
+          required: true
+          in: path
+          type: string
+        - name: userId
+          required: true
+          in: path
+          type: string
+      description: |
+        Deletes a member from the team
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: Team
+          schema:
+            $ref: '#/definitions/Team'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications:
+    get:
+      summary: list applications
+      description: |
+        Applications endpoint returns information about app added by the User
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: An array of applications
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Application'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: create application
+      parameters:
+        - name: body
+          description: json object for application
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              appName:
+                type: string
+                description: Name of the application
+                example: Paramount
+              packageName:
+                type: string
+                description: Mobile app package name
+                example: com.appelago.paramount
+              fcmServerKey:
+                type: string
+                description: FCM server key used for Android push notifications
+                example: AIzaSyDhAtPeiK9i8fIUodzRuB2H7BLHFEbxOk8
+      description: |
+        Create an application and generates apiKey and apiSecret
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: Application
+          schema:
+            $ref: '#/definitions/Application'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}:
+    get:
+      summary: get an application detail
+      description: |
+        Get a application detail
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: An object of application
+          schema:
+            $ref: '#/definitions/Application'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: delete an application
+      description: |
+        delete a campaign
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: An object of application
+          schema:
+            $ref: '#/definitions/Application'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update an application
+      description: |
+        Update an application
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for application
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Application'
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: An object of application
+          schema:
+            $ref: '#/definitions/Application'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/pem:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      summary: uploads pem file
+      description: |
+        uploads pem file for iOS push notification
+        use keyPem or certPem as fileName
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: fileName
+          required: true
+          in: query
+          type: string
+        - name: passPhrase
+          required: false
+          in: query
+          type: string
+        - name: pemFile
+          required: true
+          in: formData
+          type: file
+      tags:
+        - Applications
+      responses:
+        '200':
+          description: An object of Application
+          schema:
+            $ref: '#/definitions/Application'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /images/upload:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      summary: uploads image
+      description: |
+        uploads icon for application
+      parameters:
+        - name: image
+          required: true
+          in: formData
+          type: file
+      tags:
+        - Image
+      responses:
+        '200':
+          description: An object of Image'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/segments:
+    get:
+      summary: list segments
+      description: |
+        Returns list of segments inside application
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Segments
+      responses:
+        '200':
+          description: An array of segmetns
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Segment'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: create segment
+      description: |
+        Creates a segment with basic properties
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for segment
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: name of the segment
+                example: Age Group
+              filter:
+                type: object
+      tags:
+        - Segments
+      responses:
+        '200':
+          description: An object of segment
+          schema:
+            $ref: '#/definitions/Segment'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/segments/{segmentId}:
+    get:
+      summary: get a segment detail
+      description: |
+        Get a segment detail
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: segmentId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Segments
+      responses:
+        '200':
+          description: An object of segment
+          schema:
+            $ref: '#/definitions/Segment'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: delete a segment
+      description: |
+        delete a segment
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: segmentId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Segments
+      responses:
+        '200':
+          description: An object of segment
+          schema:
+            $ref: '#/definitions/Segment'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update segment
+      description: |
+        Update a segment
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: segmentId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for segment
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Segment'
+      tags:
+        - Segments
+      responses:
+        '200':
+          description: An object of segment
+          schema:
+            $ref: '#/definitions/Segment'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/filters:
+    get:
+      summary: list filters
+      description: |
+        Returns list of filters inside application
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Filters
+      responses:
+        '200':
+          description: An array of filters
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Filter'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: create filter
+      description: |
+        Creates a filter with basic properties
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for filter
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              body:
+                type: object
+                description: object for filter similar to mongoose query format
+      tags:
+        - Filters
+      responses:
+        '200':
+          description: An object of filter
+          schema:
+            $ref: '#/definitions/Filter'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/filters/{filterId}:
+    get:
+      summary: get a filter detail
+      description: |
+        Get a filter detail
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: filterId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Filters
+      responses:
+        '200':
+          description: An object of filter
+          schema:
+            $ref: '#/definitions/Filter'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: delete a filter
+      description: |
+        delete a filter
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: filterId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Filters
+      responses:
+        '200':
+          description: An object of filter
+          schema:
+            $ref: '#/definitions/Filter'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update filter
+      description: |
+        Update a filter
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: filterId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for filter
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Filter'
+      tags:
+        - Filters
+      responses:
+        '200':
+          description: An object of filter
+          schema:
+            $ref: '#/definitions/Filter'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/customEvents:
+    get:
+      summary: list custom events
+      description: |
+        Returns list of custom events inside application
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Custom Events
+      responses:
+        '200':
+          description: An array of custom events
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CustomEvent'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: create custom event
+      description: |
+        Creates a custom event with basic properties
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for custom event
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              eventTarget:
+                type: string
+              eventType:
+                type: string
+              eventValue:
+                type: string
+      tags:
+        - Custom Events
+      responses:
+        '200':
+          description: An object of custom event
+          schema:
+            $ref: '#/definitions/CustomEvent'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/customEvents/{customEventId}:
+    get:
+      summary: get a custom event detail
+      description: |
+        Get a custom event detail
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: customEventId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Custom Events
+      responses:
+        '200':
+          description: An object of custom event
+          schema:
+            $ref: '#/definitions/CustomEvent'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: delete a custom event
+      description: |
+        delete a custom event
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: customEventId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Custom Events
+      responses:
+        '200':
+          description: An object of custom event
+          schema:
+            $ref: '#/definitions/CustomEvent'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update custom event
+      description: |
+        Update a custom event
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: customEventId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for custom event
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/CustomEvent'
+      tags:
+        - Custom Events
+      responses:
+        '200':
+          description: An object of filter
+          schema:
+            $ref: '#/definitions/Filter'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/campaign_counts:
+    get:
+      summary: get campaign counts by status
+      description: |
+        get campaign counts by status
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: campaign counts by status
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/campaigns:
+    get:
+      summary: list campaigns
+      description: |
+        Returns list of campaigns inside application
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An array of campaigns
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Campaign'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: create campaign
+      description: |
+        Creates a campaign with basic properties
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for campaign
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: title of campaign
+                example: testing campaign
+              tags:
+                type: array
+                items:
+                  type: string
+              platform:
+                $ref: '#/definitions/Platform'
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An object of campaign
+          schema:
+            $ref: '#/definitions/Campaign'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/campaigns/{campaignId}:
+    get:
+      summary: get a campaign detail
+      description: |
+        Get a campaign detail
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: campaignId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An object of campaign
+          schema:
+            $ref: '#/definitions/Campaign'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: delete a campaign
+      description: |
+        delete a campaign
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: campaignId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An object of campaign
+          schema:
+            $ref: '#/definitions/Campaign'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update campaign
+      description: |
+        Update a campaign
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: campaignId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for campaign
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Campaign'
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An object of campaign
+          schema:
+            $ref: '#/definitions/Campaign'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/campaigns/{campaignId}/image:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      summary: uploads image
+      description: |
+        uploads animation for a campaign
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: campaignId
+          required: true
+          in: path
+          type: string
+        - name: image
+          required: true
+          in: formData
+          type: file
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An object of Image
+          schema:
+            $ref: '#/definitions/Campaign'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/campaigns/{campaignId}/schedule:
+    put:
+      summary: save campaign schedule
+      description: |
+        Save campaign delivery schedule
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: campaignId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object for campaign schedule
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/CampaignSchedule'
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An object of campaign schedule
+          schema:
+            $ref: '#/definitions/CampaignSchedule'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: remove campaign schedule
+      description: |
+        remove campaign schedule
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: campaignId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An object of campaign schedule
+          schema:
+            $ref: '#/definitions/CampaignSchedule'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/campaigns/{campaignId}/duplicate:
+    get:
+      summary: duplicate a campaign
+      description: |
+        Duplicate campaign
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: campaignId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Campaigns
+      responses:
+        '200':
+          description: An object of campaign
+          schema:
+            $ref: '#/definitions/Campaign'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/analytics/devicesByPlatform:
+    get:
+      summary: retrieve device analytics
+      description: |
+        retrieve device analytics grouped by optIn, uninstall status
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+      tags:
+        - Analytics
+      responses:
+        '200':
+          description: Array of aggregation grouped by platform
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/analytics/dpCount:
+    get:
+      summary: retrieve dp analytics
+      description: |
+        retrieve dp count by status
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: startDate
+          required: false
+          in: query
+          type: string
+        - name: endDate
+          required: false
+          in: query
+          type: string
+        - name: groupBy
+          required: false
+          in: query
+          type: string
+        - name: status
+          required: false
+          in: query
+          type: number
+      tags:
+        - Analytics
+      responses:
+        '200':
+          description: dp analytics
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/analytics/getAudiences:
+    get:
+      summary: retrieve audience analytics
+      description: |
+        retrieve audience analytics by segment
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: segmentId
+          required: false
+          in: query
+          type: string
+        - name: offset
+          required: false
+          in: query
+          type: number
+        - name: limit
+          required: false
+          in: query
+          type: number
+      tags:
+        - Analytics
+      responses:
+        '200':
+          description: Array of audiences
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/analytics/getAudienceCounts:
+    post:
+      summary: retrieve audience count list by segment
+      description: |
+        retrieve audience count list by segment
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              segmentIds:
+                type: array
+                items:
+                  type: string
+                description: segment ids
+      tags:
+        - Analytics
+      responses:
+        '200':
+          description: Array of audience counts
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/analytics/getAudienceCountByFilter:
+    post:
+      summary: retrieve audience count by filter
+      description: |
+        retrieve audience count by filter
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: body
+          description: json object
+          required: true
+          in: body
+          schema:
+            type: object
+            properties:
+              filter:
+                type: object
+                description: filter object
+              appUserFilter:
+                type: object
+                description: user filter
+              groupBy:
+                type: string
+                description: grouping condition if needed. leave blank if no need
+      tags:
+        - Analytics
+      responses:
+        '200':
+          description: Array of audience counts
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /applications/{applicationId}/analytics/events:
+    get:
+      summary: retrieve event analytics
+      description: |
+        retrieve event analytics by segment and custom event
+        groupby can be day, month, year
+      parameters:
+        - name: applicationId
+          required: true
+          in: path
+          type: string
+        - name: segmentId
+          required: false
+          in: query
+          type: string
+        - name: eventId
+          required: false
+          in: query
+          type: string
+        - name: eventTarget
+          required: false
+          in: query
+          type: string
+        - name: eventType
+          required: false
+          in: query
+          type: string
+        - name: eventValue
+          required: false
+          in: query
+          type: string
+        - name: groupBy
+          required: false
+          in: query
+          type: string
+        - name: startDate
+          required: false
+          in: query
+          type: string
+        - name: endDate
+          required: false
+          in: query
+          type: string
+      tags:
+        - Analytics
+      responses:
+        '200':
+          description: Array of event counts grouped
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /mobile/authenticate:
+    post:
+      summary: mobile sign in
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              apiKey:
+                type: string
+                example: Zk0C9607FNj9q6DHC1EV
+              apiSecret:
+                type: string
+                example: 7OwvXZ9H1vZtdrkrIWl7
+              uuid:
+                type: string
+                example: test-uuid
+      description: |
+        Authenticate mobile app with api key and secret.
+        Returns sender id and token to use other mobile APIs.
+      tags:
+        - Mobile API
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /mobile/user/{appUserId}:
+    put:
+      summary: update app user info
+      description: |
+        Update app user information. For now only preferences.
+      tags:
+        - Mobile API
+      parameters:
+        - name: appUserId
+          required: true
+          in: path
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AppUser'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /mobile/user/{appUserId}/user_device:
+    post:
+      summary: update user device info
+      description: |
+        Update user device information. Only specified fields in request body will be updated.
+      tags:
+        - Mobile API
+      parameters:
+        - name: appUserId
+          required: true
+          in: path
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserDevice'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /mobile/user/{appUserId}/track_event:
+    post:
+      summary: track events from mobile app
+      description: |
+        Track events from mobile app.
+      tags:
+        - Mobile API
+      parameters:
+        - name: appUserId
+          required: true
+          in: path
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AnalyticEvent'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /mobile/user/{appUserId}/unread_notifications:
+    get:
+      summary: retrieve unread notifications
+      description: |
+        Retrieve unread notifications
+      tags:
+        - Mobile API
+      parameters:
+        - name: appUserId
+          required: true
+          in: path
+          type: string
+        - name: offset
+          required: false
+          in: query
+          type: number
+        - name: limit
+          required: false
+          in: query
+          type: number
+      responses:
+        '200':
+          description: An array of notifications
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PNotification'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /mobile/user/{appUserId}/notifications/{notificationId}/set_read:
+    get:
+      summary: mark notification read
+      description: |
+        mark notification read
+      tags:
+        - Mobile API
+      parameters:
+        - name: appUserId
+          required: true
+          in: path
+          type: string
+        - name: notificationId
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: updated notification
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /mobile/send_verification_code:
+    get:
+      summary: send verification code
+      description: |
+        send verification code to email or phone
+        verifyMethod can be either 'email' or 'phone'
+      tags:
+        - Mobile API
+      parameters:
+        - name: uuid
+          required: true
+          in: query
+          type: string
+        - name: verifyMethod
+          required: true
+          in: query
+          type: string
+        - name: email
+          required: false
+          in: query
+          type: string
+        - name: phone
+          required: false
+          in: query
+          type: string
+      responses:
+        '200':
+          description: success message
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+  /mobile/verify_code:
+    get:
+      summary: verify code
+      description: |
+        verify the code received on email or phone
+      tags:
+        - Mobile API
+      parameters:
+        - name: uuid
+          required: true
+          in: query
+          type: string
+        - name: verifyToken
+          required: true
+          in: query
+          type: string
+      responses:
+        '200':
+          description: success message
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Application:
+    type: object
+    properties:
+      image:
+        type: string
+        description: icon url
+      appName:
+        type: string
+        description: Name of the application
+      packageName:
+        type: string
+        description: Mobile app package name
+      apiKey:
+        type: string
+        description: Key used for mobile api
+      apiSecret:
+        type: string
+        description: Secret used for mobile api
+      fcmServerKey:
+        type: string
+        description: FCM Server Key used for push notifications on Android
+      environment:
+        type: string
+        description: development or production
+  User:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: User ID
+      email:
+        type: string
+        description: First Name
+      lastName:
+        type: string
+        description: Last Name
+      profileImageURL:
+        type: string
+        description: Url of the user's profile avatar
+  Team:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Team ID
+      name:
+        type: string
+        description: Team Name
+      description:
+        type: string
+        description: Description
+      owner:
+        type: string
+        description: Owner of the Team
+        $ref: '#/definitions/User'
+      members:
+        type: array
+        description: List of member usrs
+        items:
+            $ref: '#/definitions/User'
+      access:
+        type: array
+        description: List of assigned access
+        items:
+            $ref: '#/definitions/TeamAccess'
+  TeamAccess:
+    type: object
+    properties:
+      application:
+        type: object
+        description: Application ID
+        $ref: '#/definitions/Application'
+      resource:
+        type: string
+        description: Resource
+  AppUser:
+    type: object
+    properties:
+      uuid:
+        type: string
+      preferences:
+        type: array
+        items:
+          type: string
+          example: Comedy
+  UserDevice:
+    type: object
+    properties:
+      deviceToken:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      gender:
+        type: string
+        description: M/F
+      language:
+        type: string
+      location:
+        type: object
+        properties:
+          lat:
+            type: string
+          lng:
+            type: string
+      country:
+        type: string
+      address:
+        type: string
+      state:
+        type: string
+      city:
+        type: string
+      zipcode:
+        type: string
+      osNumber:
+        type: string
+      deviceVendor:
+        type: string
+      deviceModel:
+        type: string
+      devicePlatform:
+        type: string
+      carrier:
+        type: string
+      connectivityType:
+        type: string
+      sdkVersion:
+        type: string
+      packageName:
+        type: string
+      appVersion:
+        type: string
+      pushNotificationEnabled:
+        type: boolean
+      uninstalled:
+        type: boolean
+  AnalyticEvent:
+    type: object
+    properties:
+      eventType:
+        type: string
+        example: open
+      eventTarget:
+        type: string
+        example: app
+      eventValue:
+        type: string
+        example: test
+  Segment:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
+        example: Age Group
+      filter:
+        type: object
+      application:
+        $ref: '#/definitions/Application'
+  Filter:
+    type: object
+    properties:
+      _id:
+        type: string
+      body:
+        type: object
+  Campaign:
+    type: object
+    properties:
+      campaignType:
+        type: string
+        example: url
+      title:
+        type: string
+        example: test-campaign
+      url:
+        type: string
+        example: https://www.google.com
+      tags:
+        type: array
+        items:
+          type: string
+      platform:
+        $ref: '#/definitions/Platform'
+      loopCount:
+        type: integer
+        minimum: 1
+        maximum: 100
+      loopDelay:
+        type: integer
+        minimum: 0
+        maximum: 180000
+      message:
+        type: string
+        example: sample notification message
+      messagePosition:
+        type: string
+        example: top
+      expiresAt:
+        type: string
+        format: date-time
+      deliveryAction:
+        type: object
+        properties:
+          dpLimit:
+            type: integer
+          dayLimit:
+            type: integer
+          actionType:
+            type: string
+          isUsed:
+            type: boolean
+      deliverySchedule:
+        $ref: '#/definitions/CampaignSchedule'
+      isActive:
+        type: boolean
+      isPaused:
+        type: boolean
+  Platform:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Android
+        displayType:
+          type: array
+          items:
+            type: string
+            example: nova
+  CampaignSchedule:
+    type: object
+    properties:
+      repeat:
+        type: string
+        default: once
+        enum:
+        - once
+        - daily
+        - weekly
+        - monthly
+      sendDate:
+        type: string
+        format: date-time
+      timeZone:
+        type: string
+        default: America/New_York
+      status:
+        type: string
+        default: ready
+        enum:
+        - ready
+        - inprogress
+      lastSent:
+        type: string
+        format: date-time
+      jobId:
+        type: string
+      frequency:
+        type: string
+        default: immediate
+        enum:
+        - immediate
+        - scheduled
+  Image:
+    type: object
+    properties:
+      type:
+        type: string
+        example: 'image/gif'
+      url:
+        type: string
+        example: http://www.example.com/example.gif
+      size:
+        type: number
+        example: 10000
+      duration:
+        type: number
+        example: 1000
+  CustomEvent:
+    type: object
+    properties:
+      name:
+        type: string
+        example: notification receive
+      eventType:
+        type: string
+        example: receive
+      eventTarget:
+        type: string
+        example: notification
+      eventValue:
+        type: string
+        example: ""
+  PNotification:
+    type: object
+    properties:
+      animation:
+        $ref: '#/definitions/Image'
+      message:
+        type: string
+        example: sample notification message
+      messagePosition:
+        type: string
+        example: top
+      url:
+        type: string
+        example: https://www.google.com
+      campaignType:
+        type: string
+        example: url
+      displayType:
+        type: array
+        items:
+          type: string
+          example: nova
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

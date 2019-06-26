@@ -1,0 +1,46 @@
+{
+  apps: [
+    {
+      name: "DP-MEAN",
+      script: "server.js",
+      env_production: {
+        NODE_ENV: "production"
+      },
+      env_development: {
+        NODE_ENV: "development"
+      }
+    },
+    {
+      name: "Push notifications service",
+      script: "notifications.js",
+      env_production: {
+        NODE_ENV: "production"
+      },
+      env_development: {
+        NODE_ENV: "development"
+      }
+    }
+  ],
+  deploy: {
+    development: {
+      key: "./pem/dp-mean.pem",
+      user: "ubuntu",
+      host: "52.5.146.255",
+      ref: "origin/dev",
+      repo: "git@bitbucket.org:cmodels/dp-mean-stack.git",
+      path: "/srv/dp-mean",
+      "pre-deploy": "",
+      "post-deploy": "nvm use 6.9; npm install; grunt build; pm2 startOrRestart ecosystem.json5 --env development"
+    },
+    production: {
+      key: "./pem/dp-mean.pem",
+      user: "ubuntu",
+      host: "52.6.70.119",
+      ref: "origin/master",
+      repo: "git@bitbucket.org:cmodels/dp-mean-stack.git",
+      path: "/srv/dp/dp-mean",
+      "pre-deploy": "",
+      "post-deploy": "nvm use 6.9; npm install; grunt build; pm2 startOrRestart ecosystem.json5 --env development"
+    }
+  }
+}
