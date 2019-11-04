@@ -51,7 +51,7 @@
     "mocha": "~1.20.0",
     "moment": "^2.11.1",
     "moment-timezone": "^0.5.0",
-    "mongoose": "^4.5.10",
+    "mongoose": "^5.7.5",
     "morgan": "^1.6.1",
     "multer": "~1.0.5",
     "node-crontab": "0.0.8",
