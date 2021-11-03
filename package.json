@@ -75,7 +75,7 @@
     "swagger-express-middleware": "^0.4.7",
     "swig": "^1.4.2",
     "twilio": "^2.11.1",
-    "validator": "^3.41.2"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.4",
